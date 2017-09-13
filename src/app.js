@@ -2,11 +2,18 @@
 
 const express    = require('express');
 const bodyParser = require ('body-parser'); //tratar as requisiçõe
+const mongoose = require('mongoose'); 
 
 const app    = express();
 const router = express.Router(); 
 
-// Caarrega as rotas
+// conectando ao banco
+mongoose.connect('mongodb://localhost/node-str');
+
+// carrega os models
+const Product = require('./models/product');
+
+// Carrega as rotas
 const indexRoute = require('./routes/index-route');
 const productRoute = require('./routes/product-route');
 
