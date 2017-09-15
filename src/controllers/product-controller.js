@@ -62,6 +62,7 @@ exports.getByTags = (req, res, next) => {
 }
 
 exports.post = (req, res, next) => {
+
   let product = new Product(req.body);
   product
     .save()
