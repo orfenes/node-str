@@ -9,7 +9,10 @@ exports.get = (req, res, next) => {
     .then(data => {
       res.status(200).send(data);
     }).catch(e => {
-      res.status(400).send({message: 'Falha ao carregar lista de produtos', data: e});
+      res.status(400).send({
+        message: 'Falha ao carregar lista de produtos', 
+        data: e
+      });
     })
 }
 
@@ -22,7 +25,10 @@ exports.getBySlug = (req, res, next) => {
     .then(data => {
       res.status(200).send(data);
     }).catch(e => {
-      res.status(400).send({message: 'Falha ao carregar lista de produtos', data: e});
+      res.status(400).send({
+        message: 'Falha ao carregar lista de produtos', 
+        data: e
+      });
     })
 }
 
@@ -32,7 +38,10 @@ exports.getById = (req, res, next) => {
     .then(data => {
       res.status(200).send(data);
     }).catch(e => {
-      res.status(400).send({message: 'Falha ao carregar lista de produtos', data: e});
+      res.status(400).send({
+        message: 'Falha ao carregar lista de produtos', 
+        data: e
+      });
     })
 }
 
@@ -45,7 +54,10 @@ exports.getByTags = (req, res, next) => {
   .then(data => {
     res.status(200).send(data);
   }).catch(e => {
-    res.status(400).send({message: 'Falha ao carregar lista de produtos', data: e});
+    res.status(400).send({
+      message: 'Falha ao carregar lista de produtos', 
+      data: e
+    });
   })
 }
 
@@ -54,22 +66,28 @@ exports.post = (req, res, next) => {
   product
     .save()
     .then(x => {
-      res.status(201).send({message: 'Produto cadastrado com sucesso'});
+      res.status(201).send({
+        message: 'Produto cadastrado com sucesso'
+      });
     }).catch(e => {
-      res.status(400).send({message: 'Falha ao cadastrar o produto', data: e});
+      res.status(400).send({
+        message: 'Falha ao cadastrar o produto', 
+        data: e
+      });
     });  
 }
 
-exports.put = (req, res, next) => {
+exports.put = (req, res, next) => {  
   Product
     .findByIdAndUpdate(req.params.id, {
       $set: {
         title: req.body.title,
         description: req.body.description,
-        price: req.body.price
+        price: req.body.price,
+        slug: req.body.slug
       }
     }).then(x => {
-      res.status(201).send({ 
+      res.status(200).send({ 
         message: 'Produto cadastrado com sucesso'
       });
     }).catch(e => {
@@ -81,5 +99,16 @@ exports.put = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  res.status(201).send(req.body);
+  Product
+    .findOneAndRemove(req.body.id)    
+    .then(x => {
+      res.status(200).send({ 
+        message: 'Produto removido com sucesso'
+      });
+    }).catch(e => {
+      res.status(400).send({
+        message: 'Falha ao remover o produto', 
+        data: e
+      });
+    });
 };
