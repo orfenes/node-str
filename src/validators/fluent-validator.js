@@ -1,39 +1,45 @@
 'use strict'
 
-class ValidarionContract{ 
+class ValidarionContract{  
 
   constructor(){
-    this.errors = [];
+    this.infoErrors = [];
   }
 
   isRequired(value, message){
     if(!value || value.length <= 0){
-      this.errors.push({message: message});
+      this.infoErrors.push({message: message});
     }
   };
 
   hasMaxLen(value, max, message){
     if(!value || value.length > max){
-      errors.push({message: message});
+      this.infoErrors.push({message: message});
     }
   };
 
+  hasMinLen(valeu, max, message){    
+    if(valeu.length < max){      
+      this.infoErrors.push({message: message});
+    }
+  }
+
   isFixedLen(value, len, message){
     if(value.length != len){
-      this.errors.push({message: message});
+      this.infoErrors.push({message: message});
     }
   };
 
   errors(value, message){
-    return errors;
+    return this.infoErrors;
   };
 
   clear(){
-    return this.errors = [];
+    return this.infoErrors = [];
   };
 
-  isValid(){
-    return this.errors.length == 0;
+  isValid(){    
+    return this.infoErrors.length == 0;
   };
 };
 
