@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
+const ValidarionContract = require('../validators/fluent-validator');
 
 exports.get = (req, res, next) => {
   Product
