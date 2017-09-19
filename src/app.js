@@ -3,12 +3,13 @@
 const express    = require('express');
 const bodyParser = require ('body-parser'); //tratar as requisiçõe
 const mongoose = require('mongoose'); 
+const config = require('./config');
 
 const app    = express();
 const router = express.Router(); 
 
 // conectando ao banco
-mongoose.connect('mongodb://localhost/node-str');
+mongoose.connect(config.connectionString);
 
 // carrega os models
 const Product = require('./models/product');
@@ -23,7 +24,6 @@ const orderRoutes = require ('./routes/order-route');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 
 app.use('/', indexRoute);
 app.use('/products', productRoute);
