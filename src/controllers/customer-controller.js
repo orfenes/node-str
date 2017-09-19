@@ -2,6 +2,7 @@
 
 const ValidarionContract = require('../validators/fluent-validator');
 const repository = require('../respositories/customer-repositorie');
+const md5 = require('md5');
 
 exports.get = async(req, res, next) => {
   try{
@@ -27,7 +28,9 @@ exports.post = async(req, res, next) => {
   }
 
   try{
-    await repository.create(req.body)
+    await repository.create({
+      name: req.body.name.body
+    })
     res.status(201).send({
       message: 'Cadastro realizando com sucesso'
     });
