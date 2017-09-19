@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Customer = mongoose.model('Customer');
 
 exports.get = async() => {
-  let res = await Product.find({});
+  let res = await Customer.find({});
   return res;
 }
 

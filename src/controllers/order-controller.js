@@ -15,7 +15,7 @@ exports.get = async(req, res, next) => {
 }
 
 exports.post = async(req, res, next) => {
-  try{
+  try{    
     await repository.create({
       customer: req.body.customer,
       number: guid.raw().substring(0, 6),

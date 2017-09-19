@@ -10,7 +10,7 @@ const schema = new Schema({
   },
   number: {
     type: String,
-    required: [true, 'Name obrigatorio']
+    required: true
   },
   createDate: {
     type: String,
@@ -35,7 +35,7 @@ const schema = new Schema({
     },
     product: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Customer'
+      ref: 'Product'
     }
   }]
 });
