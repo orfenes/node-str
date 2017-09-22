@@ -3,7 +3,9 @@
 const ValidarionContract = require('../validators/fluent-validator');
 const repository = require('../respositories/customer-repositorie');
 const md5 = require('md5');
+const authService = require('../service/auth-service');
 const emailService = require('../service/new-service');
+
 
 
 exports.get = async(req, res, next) => {
@@ -16,7 +18,6 @@ exports.get = async(req, res, next) => {
     })
   }  
 }
-
 
 exports.post = async(req, res, next) => {
   let contract = new ValidarionContract();
@@ -33,7 +34,8 @@ exports.post = async(req, res, next) => {
     await repository.create({
       name: req.body.name,
       email: req.body.email,
-      password: md5(req.body.password + global.SALT_KEY)
+      password: md5(req.body.password + global.SALT_KEY),
+      roles: ["user"]
     })
 
     emailService.send( req.body.email, 'Bem vindo ao node store', global.EMAIL_TMPL.replace('{0}', req.body.name));
@@ -48,3 +50,77 @@ exports.post = async(req, res, next) => {
     });
   } 
 }
+
+exports.authenticate = async(req, res, next) => {  
+  try{
+    let custumer = await repository.authenticate({      
+      email: req.body.email,
+      password: md5(req.body.password + global.SALT_KEY)
+    })
+
+    if(!custumer){     
+      res.status(404).send({
+        message: 'Usuario ou senha invalido'        
+      });
+      return;
+    }
+
+    const token = await authService.generateToken({
+      id: custumer._id,
+      email: custumer.email, 
+      name: custumer.name,
+      roles: custumer.roles
+    })
+
+    res.status(201).send({
+      token: token,
+      data: {
+        email: custumer.email,
+        name: custumer.name
+      }
+    });
+  }catch (e) {    
+    res.status(400).send({
+      message: 'Ocorreu uma falha durante a autenticação', 
+      data: e
+    });
+  } 
+}
+
+exports.refreshToken = async(req, res, next) => {  
+  try{
+
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await authService.decodeToken(token);
+
+    let custumer = await repository.getById(data.id);
+
+    if(!custumer){     
+      res.status(404).send({
+        message: 'Cliente nao encontrado'        
+      });
+      return;
+    }
+
+    const tokenData = await authService.generateToken({
+      id: custumer._id,
+      email: custumer.email, 
+      name: custumer.name,
+      roles: custumer.roles
+    })
+
+    res.status(201).send({
+      token: token,
+      data: {
+        email: custumer.email,
+        name: custumer.name
+      }
+    });
+  }catch (e) {    
+    res.status(400).send({
+      message: 'Ocorreu uma falha durante a autenticação', 
+      data: e
+    });
+  } 
+}
+
